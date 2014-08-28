@@ -42,12 +42,23 @@ bool HelloWorld::init()
                                            CC_CALLBACK_1(HelloWorld::menuCloseCallback, this));
     
 	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
-                                origin.y + closeItem->getContentSize().height/2));
+                                origin.y + closeItem->getContentSize().height/2 +200 ));
+
+
+	// add a "close" icon to exit the progress. it's an autorelease object
+	auto closeItem1 = MenuItemImage::create(
+		"CloseNormal.png",
+		"CloseSelected.png",
+		CC_CALLBACK_1(HelloWorld::menuCallback, this));
+
+	closeItem1->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width / 2,
+		origin.y + closeItem->getContentSize().height / 2 + 500));
+
 
     // create menu, it's an autorelease object
-    auto menu = Menu::create(closeItem, NULL);
+    auto menu = Menu::create(closeItem,closeItem1, NULL);
     menu->setPosition(Vec2::ZERO);
-    this->addChild(menu, 1);
+    this->addChild(menu, 0);
 
     /////////////////////////////
     // 3. add your codes below...
@@ -64,21 +75,41 @@ bool HelloWorld::init()
     // add the label as a child to this layer
     this->addChild(label, 1);
 
+	
+
     // add "HelloWorld" splash screen"
-    auto sprite = Sprite::create("HelloWorld.png");
+    //auto sprite = Sprite::create("HelloWorld.png");
 
     // position the sprite on the center of the screen
-    sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
+    //sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
 
     // add the sprite as a child to this layer
-    this->addChild(sprite, 0);
+    //this->addChild(sprite, 0);
+
+	m_Currentitem = CreateAnewcube();
+	m_CurrentItem_x = 5;
+	m_CurrentItem_y = 5;
+
+	//schedule(schedule_selector(HelloWorld::OnTime), 0.5f);
     
     return true;
+}
+
+void HelloWorld::OnTime(float f)
+{
+	
+}
+
+void HelloWorld::menuCallback(Ref* pSender)
+{
+	TransformCubeitem();
+	return;
 }
 
 
 void HelloWorld::menuCloseCallback(Ref* pSender)
 {
+
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
 	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
     return;
@@ -121,7 +152,46 @@ void HelloWorld::DrawGride()
 
 }
 
+
+
 void HelloWorld::draw(Renderer *renderer, const Mat4& transform, uint32_t flags)
 {
+	CCLayer::draw(renderer, transform, flags);
 	DrawGride();
+	DrawCubeItem();
+	
+
+	
+}
+
+baseitem HelloWorld::CreateAnewcube()
+{
+	int num = rand() % 13;
+	return Cubeitems[num];
+}
+
+void HelloWorld::DrawCubeItem()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (m_Currentitem.c[i][j] == 1)
+			{
+				glLineWidth(1.0f);//线条宽度
+				DrawPrimitives::setDrawColor4B(255, 255, 0, 255);//颜色
+				int sourcex = m_CurrentItem_x * 40 + i * 40;
+				int sourcey = m_CurrentItem_y * 40 + j * 40 -20;
+				DrawPrimitives::drawRect(ccp(sourcex,sourcey),ccp(sourcex+40,sourcey+40));//绘制左中到右中
+			}
+				
+
+		}
+	}
+}
+
+void HelloWorld::TransformCubeitem()
+{
+	int index = m_Currentitem.transformid;
+	m_Currentitem = Cubeitems[index];
 }

@@ -13,8 +13,9 @@ typedef struct baseitem
    byte transformid;
 };
 //另外还需要预定义一些小方块形状
-/*
-= {
+
+//定义一个基本的方块
+const baseitem Cubeitems[13]= {
 //基本方块
 ////凸形 以及四种变形方式
 { { 0, 0, 0, 0,
@@ -83,7 +84,7 @@ typedef struct baseitem
 0, 0, 1, 0,
 0, 0, 0, 0 }, 10 }
 };
-*/
+
 
 
 class HelloWorld : public cocos2d::Layer
@@ -97,6 +98,7 @@ public:
     
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);
+	void menuCallback(cocos2d::Ref* pSender);
 
 
 	virtual void update(float delta);
@@ -109,11 +111,23 @@ public:
 	virtual void draw(Renderer *renderer, const Mat4& transform, uint32_t flags) override;
 	
 	//定义一个基本的方块
-	baseitem Cubeitems[13];
+	//baseitem Cubeitems[13];
 
 protected:
 	void DrawGride();
+	void DrawCubeItem();
+
+	void OnTime(float f);
+
 	//virtual void draw() final;
+
+
+private:
+	baseitem CreateAnewcube();
+	void TransformCubeitem();
+	baseitem m_Currentitem;
+	int m_CurrentItem_x;
+	int m_CurrentItem_y;
 };
 
 #endif // __HELLOWORLD_SCENE_H__
