@@ -1,4 +1,6 @@
 #include "HelloWorldScene.h"
+
+
 USING_NS_CC;
 
 Scene* HelloWorld::createScene()
@@ -63,13 +65,13 @@ bool HelloWorld::init()
     this->addChild(label, 1);
 
     // add "HelloWorld" splash screen"
-    //auto sprite = Sprite::create("HelloWorld.png");
+    auto sprite = Sprite::create("HelloWorld.png");
 
     // position the sprite on the center of the screen
-    //sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
+    sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
 
     // add the sprite as a child to this layer
-    //this->addChild(sprite, 0);
+    this->addChild(sprite, 0);
     
     return true;
 }
@@ -89,36 +91,37 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 #endif
 }
 
+void HelloWorld::update(float delta)
+{
+		
+	
+}
+
+//Ê×ÏÈÊÇ»æÖÆ±í¸ñº¯Êı
+//»æÖÆÆåÅÌµÄ¹ı³Ì
+void HelloWorld::DrawGride()
+{
+	for (int i = 0; i < (800 / 40)-1; i++)
+	{
+		glLineWidth(1.0f);//ÏßÌõ¿í¶È
+
+		DrawPrimitives::setDrawColor4B(255, 0, 0, 255);//ÑÕÉ«
+
+		DrawPrimitives::drawLine(ccp(40, 100 + (i * 40)), ccp(640 - 40, 100 + (i * 40)));//»æÖÆ×óÖĞµ½ÓÒÖĞ
+	}
+
+	for (int j = 1; j < (640 / 40); j++)
+	{
+		glLineWidth(1.0f);//ÏßÌõ¿í¶È
+
+		DrawPrimitives::setDrawColor4B(255, 0, 0, 255);//ÑÕÉ«
+
+		DrawPrimitives::drawLine(ccp(j * 40, 100), ccp(j * 40, 820));//»æÖÆ×óÖĞµ½ÓÒÖĞ
+	}
+
+}
 
 void HelloWorld::draw(Renderer *renderer, const Mat4& transform, uint32_t flags)
 {
-    glLineWidth(4);
-    for (int i = 1; i<21; i++)
-    {
-        DrawPrimitives::drawLine(Point(32,i*32), Point(672,i*32));
-    }
-    
-    
-    for (int j = 1 ;j < 21 ;j++)
-    {
-        DrawPrimitives::drawLine(Point(j*32,0), Point(j*32,640));
-    }
-    
-//    _customCommand.init(_globalZOrder);
-//    _customCommand.func = CC_CALLBACK_0(HelloWorld::onDraw, this, transform, flags);
-//    renderer->addCommand(&_customCommand);
-    // ä¸€èˆ¬æ¥è¯´ä¿„ç½—æ–¯æ–¹å—çš„å¸ƒå±€æ˜¯ä¸€ä¸ª10*20 çš„ä¸€ä¸ªæ£‹ç›˜æ ¼å­ã€‚æ¯ä¸ªæ ¼å­çš„å¤§å°å·®ä¸å¤šä¸º4*4;
-    
-   // glLineWidth(1.0f);
-    //è®¾ç½®åé¢è¦è¿›è¡Œç»˜åˆ¶æ—¶æ‰€ç”¨çš„è‰²å½©
-   // DrawPrimitives::setDrawColor4B(255,0,0,255);
-    //ç»˜åˆ¶çº¿æ¡
-    
-    //DrawPrimitives::drawLine( ccp(0, 0), ccp(4*20, 0) );
+	DrawGride();
 }
-
-
-void HelloWorld::onDraw(const Mat4 &transform, uint32_t flags)
-{
-  }
-
