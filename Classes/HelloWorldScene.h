@@ -6,11 +6,11 @@
 
 using namespace cocos2d;
 //首先定义个俄罗斯方块的方块形状
-typedef struct baseitem
+ struct baseitem
 {
    bool c[4][4];
    //变形以后对应的数据ID,255表示没有变形对应
-   byte transformid;
+   short transformid;
 };
 //另外还需要预定义一些小方块形状
 
