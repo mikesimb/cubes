@@ -74,6 +74,8 @@ bool HelloWorld::init()
 
     // add the label as a child to this layer
     this->addChild(label, 1);
+    
+    this->schedule(schedule_selector(HelloWorld::OnTime), 1.0f);
 
 	
 
@@ -88,16 +90,62 @@ bool HelloWorld::init()
 
 	m_Currentitem = CreateAnewcube();
 	m_CurrentItem_x = 5;
-	m_CurrentItem_y = 5;
+	m_CurrentItem_y = MapRows;
 
 	//schedule(schedule_selector(HelloWorld::OnTime), 0.5f);
+    
+    
+    for (int i = 0 ;i < MapRows;i++)
+        for (int j = 0 ;j < MapCols; j++) {
+            Map[i][j] = 0;
+        }
     
     return true;
 }
 
 void HelloWorld::OnTime(float f)
 {
-	
+   //判断是否产生碰撞
+    
+    for(int i = 4 ;i>0 ;i--)
+        for (int j= 4 ;j>0 ;j--)
+        {
+            if(m_Currentitem.c[i][j] == Map[m_CurrentItem_x+i][m_CurrentItem_y+1+j])
+            {
+                //碰撞了
+                Map[m_CurrentItem_x +i][m_CurrentItem_y+1+j] = m_Currentitem.c[i][j];
+            }
+        }
+    
+    
+    
+    //判断当前这个是否到底了
+    
+    if((m_CurrentItem_y-4)>= 0)
+    {
+        UpdateCurrentItemPos();
+        
+    }
+    else
+    {
+        for(int i = 4 ;i>0 ;i--)
+            for (int j= 4 ;j>0 ;j--)
+            {
+                if(m_Currentitem.c[i][j] == Map[m_CurrentItem_x+i][m_CurrentItem_y+1+j])
+                {
+                    //碰撞了
+                    Map[m_CurrentItem_x +i][m_CurrentItem_y+1+j] = m_Currentitem.c[i][j];
+                }else
+                if(m_CurrentItem_y-4 <=0)
+                    Map[m_CurrentItem_y-j][m_CurrentItem_x -i] = m_Currentitem.c[i][j];
+            }
+        m_Currentitem = {{0,0,0,0,
+            0,0,0,0,
+            0,0,0,0,
+            0,0,0,0},0} ;
+
+        
+    };
 }
 
 void HelloWorld::menuCallback(Ref* pSender)
@@ -128,26 +176,26 @@ void HelloWorld::update(float delta)
 	
 }
 
-//�����ǻ��Ʊ�����
-//�������̵Ĺ���
+// ◊œ» «ªÊ÷∆±Ì∏Ò∫Ø ˝
+//ªÊ÷∆∆Â≈Ãµƒπ˝≥Ã
 void HelloWorld::DrawGride()
 {
-	for (int i = 0; i < (800 / 40)-1; i++)
+	for (int i = 0; i <= MapCols ; i++)
 	{
-		glLineWidth(1.0f);//��������
+		glLineWidth(1.0f);//œﬂÃıøÌ∂»
 
-		DrawPrimitives::setDrawColor4B(255, 0, 0, 255);//��ɫ
+		DrawPrimitives::setDrawColor4B(255, 0, 0, 255);//—’…´
 
-		DrawPrimitives::drawLine(ccp(40, 100 + (i * 40)), ccp(640 - 40, 100 + (i * 40)));//�������е�����
+		DrawPrimitives::drawLine(ccp(40, 100 + (i * 40)), ccp((MapRows)*40, 100 + (i * 40)));//ªÊ÷∆◊Û÷–µΩ”“÷–
 	}
 
-	for (int j = 1; j < (640 / 40); j++)
+	for (int j = 1; j <= MapRows; j++)
 	{
-		glLineWidth(1.0f);//��������
+		glLineWidth(1.0f);//œﬂÃıøÌ∂»
 
-		DrawPrimitives::setDrawColor4B(255, 0, 0, 255);//��ɫ
+		DrawPrimitives::setDrawColor4B(255, 0, 0, 255);//—’…´
 
-		DrawPrimitives::drawLine(ccp(j * 40, 100), ccp(j * 40, 820));//�������е�����
+		DrawPrimitives::drawLine(ccp(j * 40, 100), ccp(j * 40, 100+(MapCols)*40));//ªÊ÷∆◊Û÷–µΩ”“÷–
 	}
 
 }
@@ -158,6 +206,7 @@ void HelloWorld::draw(Renderer *renderer, const Mat4& transform, uint32_t flags)
 {
 	CCLayer::draw(renderer, transform, flags);
 	DrawGride();
+    DrawMap();
 	DrawCubeItem();
 	
 
@@ -170,6 +219,34 @@ baseitem HelloWorld::CreateAnewcube()
 	return Cubeitems[num];
 }
 
+void HelloWorld::DrawMap()
+{
+    for (int i = 0; i < MapRows-1; i++)
+	{
+		for (int j = 0; j < MapCols ; j++)
+		{
+			if (Map[i][j] == 1)
+			{
+				glLineWidth(1.0f);//œﬂÃıøÌ∂»
+				DrawPrimitives::setDrawColor4B(255, 0, 0, 255);//—’…´
+				int sourcex = 40+i * 40;
+				int sourcey = 100+ j * 40 ;
+				DrawPrimitives::drawRect(ccp(sourcex,sourcey),ccp(sourcex+40,sourcey+40));//ªÊ÷∆◊Û÷–µΩ”“÷–
+			}
+            else{
+				glLineWidth(1.0f);//œﬂÃıøÌ∂»
+				DrawPrimitives::setDrawColor4B(0, 255, 0, 255);//—’…´
+				int sourcex =40+ i * 40;
+				int sourcey = 100 + j * 40;
+				DrawPrimitives::drawRect(ccp(sourcex,sourcey),ccp(sourcex+40,sourcey+40));//ªÊ÷∆◊Û÷–µΩ”“÷–
+                
+            }
+            
+            
+		}
+	}
+}
+
 void HelloWorld::DrawCubeItem()
 {
 	for (int i = 0; i < 4; i++)
@@ -178,16 +255,24 @@ void HelloWorld::DrawCubeItem()
 		{
 			if (m_Currentitem.c[i][j] == 1)
 			{
-				glLineWidth(1.0f);//��������
-				DrawPrimitives::setDrawColor4B(255, 255, 0, 255);//��ɫ
+				glLineWidth(1.0f);//œﬂÃıøÌ∂»
+				DrawPrimitives::setDrawColor4B(255, 255, 0, 255);//—’…´
 				int sourcex = m_CurrentItem_x * 40 + i * 40;
 				int sourcey = m_CurrentItem_y * 40 + j * 40 -20;
-				DrawPrimitives::drawRect(ccp(sourcex,sourcey),ccp(sourcex+40,sourcey+40));//�������е�����
+				DrawPrimitives::drawRect(ccp(sourcex,sourcey),ccp(sourcex+40,sourcey+40));//ªÊ÷∆◊Û÷–µΩ”“÷–
 			}
 				
 
 		}
 	}
+}
+
+void HelloWorld::UpdateCurrentItemPos()
+{
+    
+    m_CurrentItem_y--;
+    //判断是不是被阻挡了
+    
 }
 
 void HelloWorld::TransformCubeitem()
