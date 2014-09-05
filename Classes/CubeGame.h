@@ -125,26 +125,27 @@ public:
 	void CreateCurrentCubeitem();
 
 	ALS_Cubitem *  getCurrentCubeItem();
-	int getCurrentItemx();
-	int getCurrentItemy();
+	int getCurrentItemColNum();
+	int getCurrentItemyRowNum();
 
-	bool getMapdata(int x, int y);
+	bool getMapdata(int Row, int Col);
 	
-
+    void CopyItemToMap();
 protected:
 	void InitMap();
 	//碰撞检测
 	bool CheckBumpItemAndMap();
 
 	bool CheckGameisOver();
+    
 
 
 private:
 	//这个是地图数组 每个数字只用O和1来判断
 	bool m_Map[cMapRows][cMapCols];
 	ALS_Cubitem * m_Current_Cubeitem;
-	int m_Current_Cubeitem_x;
-	int m_Current_Cubeitem_y;
+	int m_Current_Cubeitem_ColNum;
+	int m_Current_Cubeitem_RowNum;
 
 };
 

@@ -1,11 +1,12 @@
+
 #include "CubeGame.h"
 #include <stdlib.h>
 //#include <stdio.h>
 
 
 CCubeGame::CCubeGame() :
-m_Current_Cubeitem_x(0),
-m_Current_Cubeitem_y(0)
+m_Current_Cubeitem_ColNum(0),
+m_Current_Cubeitem_RowNum(0)
 {
 	InitMap();
 }
@@ -28,10 +29,11 @@ void CCubeGame::InitMap()
 
 void CCubeGame::CreateCurrentCubeitem()
 {
-	int index = rand() % 17;
+	int index = arc4random()%17;
+    //rand() % 17;
 	m_Current_Cubeitem = &AItems[index];
-	m_Current_Cubeitem_x = rand() % 10;
-	m_Current_Cubeitem_y = 14;
+	m_Current_Cubeitem_ColNum = arc4random() % 6;
+	m_Current_Cubeitem_RowNum = 14;
 }
 
 void CCubeGame::TransformCubitem()
@@ -43,13 +45,13 @@ void CCubeGame::TransformCubitem()
 
 void CCubeGame::Movetoleft()
 {
-	m_Current_Cubeitem_x--;
+	m_Current_Cubeitem_ColNum--;
 
 }
 
 void CCubeGame::MovetoRight()
 {
-	m_Current_Cubeitem_x++;
+	m_Current_Cubeitem_ColNum++;
 }
 
 ALS_Cubitem * CCubeGame::getCurrentCubeItem()
@@ -64,17 +66,17 @@ bool CCubeGame::CheckBumpItemAndMap()
 		for (int j = 0; j < 4; j++)
 		{
 		//这个物体是否对于地图有碰撞
-		if ((m_Current_Cubeitem_x >= 1) && (m_Current_Cubeitem_y >= 1))
+		if ((m_Current_Cubeitem_ColNum >= 1) && (m_Current_Cubeitem_RowNum >= 1))
 		{
-			if ((m_Current_Cubeitem->c[i][j] && m_Map[m_Current_Cubeitem_x  + i][m_Current_Cubeitem_y  + j]) == 1)
-			{
-				return true;
-			}
+//			if ((m_Current_Cubeitem->c[i][j] && m_Map[m_Current_Cubeitem_RowNum  + i][m_Current_Cubeitem_ColNum + j]) == 1)
+//			{
+//				return true;
+//			}
 		}
 		else
 		{
-			if (m_Current_Cubeitem_y < 1)
-				if ((m_Current_Cubeitem->c[i][j] || m_Map[m_Current_Cubeitem_x][0]) == 1)
+			if (m_Current_Cubeitem_RowNum < 1)
+				if ((m_Current_Cubeitem->c[i][j] || m_Map[m_Current_Cubeitem_ColNum][0]) == 1)
 				{
 					return true;
 				}
@@ -85,23 +87,40 @@ bool CCubeGame::CheckBumpItemAndMap()
 
 }
 
-int CCubeGame::getCurrentItemx()
+int CCubeGame::getCurrentItemColNum()
 {
-	return m_Current_Cubeitem_x;
+	return m_Current_Cubeitem_ColNum;
 }
 
-int CCubeGame::getCurrentItemy()
+int CCubeGame::getCurrentItemyRowNum()
 {
-	return m_Current_Cubeitem_y;
+	return m_Current_Cubeitem_RowNum;
 }
 
-bool CCubeGame::getMapdata(int x, int y)
+bool CCubeGame::getMapdata(int Col, int Row )
 {
-	return m_Map[x][y];
+	return m_Map[Row][Col];
 }
 
 void CCubeGame::movetoDown()
 {
 	if (!CheckBumpItemAndMap())
-		m_Current_Cubeitem_y--;
+		m_Current_Cubeitem_RowNum--;
+    else
+    {
+        //COPY CURRENTITEM TO MAP
+        CopyItemToMap();
+    }
+}
+
+
+void CCubeGame::CopyItemToMap()
+{
+    for(int i = 0 ;i < 4 ;i++)
+        for (int j = 0 ;j < 4 ;j++)
+        {
+            if(m_Current_Cubeitem->c[i][j])
+            m_Map[m_Current_Cubeitem_RowNum+i][m_Current_Cubeitem_ColNum+j] = m_Current_Cubeitem->c[i][j];
+        }
+    CreateCurrentCubeitem();
 }

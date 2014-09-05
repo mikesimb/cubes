@@ -53,10 +53,21 @@ bool HelloWorld::init()
 
 	closeItem1->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width / 2,
 		origin.y + closeItem->getContentSize().height / 2+200));
+    
+    
+    auto closeItem2 = MenuItemImage::create(
+                                           "CloseNormal.png",
+                                           "CloseSelected.png",
+                                           CC_CALLBACK_1(HelloWorld::CloseItem2CallBack, this));
+    
+	closeItem2->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
+                                origin.y + closeItem->getContentSize().height/2 +100));
+    
+
 
 
     // create menu, it's an autorelease object
-    auto menu = Menu::create(closeItem,closeItem1, NULL);
+    auto menu = Menu::create(closeItem,closeItem1,closeItem2, NULL);
     menu->setPosition(Vec2::ZERO);
     this->addChild(menu, 0);
 
@@ -103,6 +114,10 @@ void HelloWorld::menuCallback(Ref* pSender)
 	m_CubeGame.TransformCubitem();
 }
 
+void HelloWorld::CloseItem2CallBack(Ref* pSender)
+{
+	m_CubeGame.CopyItemToMap();
+}
 
 void HelloWorld::menuCloseCallback(Ref* pSender)
 {
@@ -170,16 +185,18 @@ void HelloWorld::DrawMap()
 
 void HelloWorld::DrawCubeItem()
 {
-	for (int i = 0; i < 4; i++)
+	ALS_Cubitem * A  = m_CubeGame.getCurrentCubeItem();
+    if (A ==NULL) return;
+    for (int i = 0; i < 4; i++)
 	{
 		for (int j = 0; j < 4; j++)
 		{
-			if (m_CubeGame.getCurrentCubeItem()->c[i][j] == 1)
+			if (m_CubeGame.getCurrentCubeItem()->c[i][j] )
 			{
 				glLineWidth(1.0f);
 				DrawPrimitives::setDrawColor4B(255,0 , 0, 255);
-				int sourcex = 40+m_CubeGame.getCurrentItemx() * 40 + i * 40;
-				int sourcey = 100+m_CubeGame.getCurrentItemy() * 40 + j * 40 ;
+				int sourcex = 40+ m_CubeGame.getCurrentItemColNum()* 40 + j* 40;
+				int sourcey = 100+ m_CubeGame.getCurrentItemyRowNum()* 40 + i * 40 ;
 				DrawPrimitives::drawRect(ccp(sourcex,sourcey),ccp(sourcex+40,sourcey+40));		
 			}
 				

@@ -22,7 +22,7 @@ public:
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);
 	void menuCallback(cocos2d::Ref* pSender);
-
+    void CloseItem2CallBack(cocos2d::Ref* pSender);
 
 	virtual void update(float delta);
 
