@@ -29,10 +29,11 @@ void CCubeGame::InitMap()
 
 void CCubeGame::CreateCurrentCubeitem()
 {
-	int index = arc4random()%17;
-    //rand() % 17;
+	//int index = arc4random()%17;
+     int index = rand() % 17;
 	m_Current_Cubeitem = &AItems[index];
-	m_Current_Cubeitem_ColNum = arc4random() % 6;
+	//m_Current_Cubeitem_ColNum = arc4random() % 6;
+	m_Current_Cubeitem_ColNum = rand() % 6;
 	m_Current_Cubeitem_RowNum = 14;
 }
 
@@ -71,7 +72,7 @@ bool CCubeGame::CheckBumpItemAndMap()
             {
                 for (int j = 0 ; j < 4; j++) {
                    //判断Cubeitem是不是有东西的点碰到底边了
-                    if(m_Current_Cubeitem->c[i][j] && m_Map[m_Current_Cubeitem_RowNum  + i][m_Current_Cubeitem_ColNum + j])
+					if (m_Current_Cubeitem->c[i][j] && (!m_Map[m_Current_Cubeitem_RowNum +i][m_Current_Cubeitem_ColNum + j]))
                        return true;
                 }
             }
@@ -82,39 +83,16 @@ bool CCubeGame::CheckBumpItemAndMap()
         //判断CurrentCubItem是不是能够下移动？
         for (int i = 0 ; i < 4; i++) {
                 for (int j = 0 ; j < 4; j++) {
-                    //判断Cubeitem是不是有东西的点碰到底边了
-                    if(m_Current_Cubeitem->c[i][j] && m_Map[m_Current_Cubeitem_RowNum  + i][m_Current_Cubeitem_ColNum + j])
+                    //判断Cubeitem是不是有东西的点碰到东西了？
+					if (m_Current_Cubeitem_RowNum + i >= cMapRows) break;
+					if (m_Current_Cubeitem_RowNum + i - 1 >= cMapRows) break;
+                    if(m_Current_Cubeitem->c[i][j] && (m_Map[m_Current_Cubeitem_RowNum  + i-1][m_Current_Cubeitem_ColNum+j ]))
                         return true;
             }
         }
 
     }
-    //可以
-    //不可以
-    
-    //判断是不是在最左边
-    //判断是不是在最上边
-    //判断是不是在最下边
-	for (int i = 0; i < 4; i++)
-		for (int j = 0; j < 4; j++)
-		{
-		//’‚∏ˆŒÔÃÂ «∑Ò∂‘”⁄µÿÕº”–≈ˆ◊≤
-		if ((m_Current_Cubeitem_ColNum >= 1) && (m_Current_Cubeitem_RowNum >= 1))
-		{
-//			if ((m_Current_Cubeitem->c[i][j] && m_Map[m_Current_Cubeitem_RowNum  + i][m_Current_Cubeitem_ColNum + j]) == 1)
-//			{
-//				return true;
-//			}
-		}
-		else
-		{
-			if (m_Current_Cubeitem_RowNum < 1)
-				if ((m_Current_Cubeitem->c[i][j] || m_Map[m_Current_Cubeitem_ColNum][0]) == 1)
-				{
-					return true;
-				}
-		}
-		}
+   
 
 	return false;
 
