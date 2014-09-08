@@ -23,6 +23,11 @@ public:
     void menuCloseCallback(cocos2d::Ref* pSender);
 	void menuCallback(cocos2d::Ref* pSender);
     void CloseItem2CallBack(cocos2d::Ref* pSender);
+    
+    void MoveLeftCallback(cocos2d::Ref* pSender);
+    void MoveRightCallBack(cocos2d::Ref* pSender);
+    void MoveDownCallback(cocos2d::Ref* pSender);
+    void TransformCallback(cocos2d::Ref* pSender);
 
 	virtual void update(float delta);
 

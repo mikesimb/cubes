@@ -63,11 +63,53 @@ bool HelloWorld::init()
 	closeItem2->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
                                 origin.y + closeItem->getContentSize().height/2 +100));
     
+    auto leftItem = MenuItemImage::create(
+                                          "left.png",
+                                          "left.png",
+                                          CC_CALLBACK_1(HelloWorld::MoveLeftCallback, this));
+    
+	leftItem->setPosition(Vec2(origin.x + visibleSize.width - leftItem->getContentSize().width/2 -400,
+                               770));
+    
+    leftItem->setScale(0.3, 0.3);
+    //menu->addChild(leftItem);
+    
+    auto downItem = MenuItemImage::create(
+                                          "down.png",
+                                          "down.png",
+                                          CC_CALLBACK_1(HelloWorld::MoveDownCallback, this));
+    
+	downItem->setPosition(Vec2(origin.x + visibleSize.width - leftItem->getContentSize().width/2-300 ,
+                               770));
+    
+    downItem->setScale(0.3, 0.3);
+    //menu->addChild(downItem);
+    auto rightItem = MenuItemImage::create(
+                                           "right.png",
+                                           "right.png",
+                                           CC_CALLBACK_1(HelloWorld::MoveRightCallBack, this));
+    
+	rightItem->setPosition(Vec2(origin.x + visibleSize.width - leftItem->getContentSize().width/2-200 ,
+                                770));
+    
+    rightItem->setScale(0.3, 0.3);
+    //menu->addChild(rightItem);
+    auto topItem = MenuItemImage::create(
+                                         "top.png",
+                                         "top.png",
+                                         CC_CALLBACK_1(HelloWorld::TransformCallback, this));
+    
+	topItem->setPosition(Vec2(origin.x + visibleSize.width - leftItem->getContentSize().width/2 -300,
+                              850));
+    
+   // menu->addChild(topItem);
+ 	topItem->setScale(0.3, 0.3);
+    
 
 
 
     // create menu, it's an autorelease object
-    auto menu = Menu::create(closeItem,closeItem1,closeItem2, NULL);
+    auto menu = Menu::create(closeItem,closeItem1,closeItem2,leftItem,rightItem,downItem,topItem, NULL);
     menu->setPosition(Vec2::ZERO);
     this->addChild(menu, 0);
 
@@ -87,8 +129,7 @@ bool HelloWorld::init()
     this->addChild(label, 1);
     
     this->schedule(schedule_selector(HelloWorld::OnTime), 1.0f);
-
-	
+    
 
     // add "HelloWorld" splash screen"
     //auto sprite = Sprite::create("HelloWorld.png");
@@ -101,6 +142,27 @@ bool HelloWorld::init()
 
 	m_CubeGame.CreateCurrentCubeitem();
     return true;
+}
+
+
+void HelloWorld::MoveDownCallback(cocos2d::Ref *pSender)
+{
+    
+}
+
+void HelloWorld::MoveLeftCallback(cocos2d::Ref *pSender)
+{
+    m_CubeGame.Movetoleft();
+}
+
+void HelloWorld::MoveRightCallBack(cocos2d::Ref *pSender)
+{
+    m_CubeGame.MovetoRight();
+}
+
+void HelloWorld::TransformCallback(cocos2d::Ref *pSender)
+{
+    m_CubeGame.TransformCubitem();
 }
 
 void HelloWorld::OnTime(float f)
