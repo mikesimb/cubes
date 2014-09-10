@@ -142,7 +142,9 @@ protected:
 
 	bool CheckBumpItemandMapforRight();
 
-	bool CheckCanClearRow();
+	bool CheckCanClearRow(int RowNum);
+
+	void ClearMap();
 	bool CheckGameisOver();
     
 

@@ -145,9 +145,12 @@ bool CCubeGame::CheckBumpItemAndMap()
     }
    
 
+	ClearMap();
+
 	return false;
 
 }
+
 
 int CCubeGame::getCurrentItemColNum()
 {
@@ -224,8 +227,44 @@ bool CCubeGame::CheckBumpItemandMapforRight()
 	return false;
 
 }
-//判断是不是可以消除一行
-bool CCubeGame::CheckCanClearRow()
+
+
+void CCubeGame::ClearMap()
 {
-	return false;
+	bool tempmap[cMapRows][cMapCols] = {false};
+	int TempRows = 0;
+	bool CanClearRow = false;
+	for (int i = 0; i < cMapRows; i++)
+	{
+		//判断本行是不是可以消除
+		CanClearRow = CheckCanClearRow(i);
+		if (!CanClearRow)
+		{
+			//COPY本行数据到TempMap中
+			for (int j = 0; j < cMapCols;j++)
+			{
+				tempmap[TempRows][j] = m_Map[i][j];
+			}
+			TempRows++;
+		}
+	}
+
+	for (int row = 0; row < cMapRows;row++)
+	{
+		for (int col = 0; col < cMapCols; col++)
+		{
+			m_Map[row][col] = tempmap[row][col];
+		}
+	}
+}
+//判断是不是可以消除一行
+bool CCubeGame::CheckCanClearRow( int RowNum)
+{
+	for (int i = 0; i < cMapCols; i++)
+	{
+		if (!m_Map[RowNum][i])
+			return false;
+	}
+	return true;
+
 }
