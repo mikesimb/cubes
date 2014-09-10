@@ -46,18 +46,69 @@ void CCubeGame::TransformCubitem()
 
 void CCubeGame::Movetoleft()
 {
-	m_Current_Cubeitem_ColNum--;
+	if (!CheckBumpItemandMapforleft())
+	   m_Current_Cubeitem_ColNum--;
+
+
+	//首先判断是不是可以移动到这里?
+
 
 }
 
 void CCubeGame::MovetoRight()
 {
-	m_Current_Cubeitem_ColNum++;
+	if (!CheckBumpItemandMapforRight())
+	      m_Current_Cubeitem_ColNum++;
 }
 
 ALS_Cubitem * CCubeGame::getCurrentCubeItem()
 {
 	return m_Current_Cubeitem;
+}
+
+
+bool CCubeGame::CheckBumpItemandMapforleft()
+{
+	//向左移动
+	if (m_Current_Cubeitem_ColNum < 0)
+	{
+		//这里说明到了左边界
+		//判断CurrentCubItem是不是能够下移动？
+		for (int i = 0; i < 4; i++) {
+			if ((m_Current_Cubeitem_ColNum + i) == 0)
+			{
+				for (int j = 0; j < 4; j++) {
+					//判断Cubeitem是不是有东西的点碰到左边了
+					if (m_Current_Cubeitem->c[i][j] )
+						return true;
+				}
+			}
+		}
+	}
+	else
+	{
+		for (int i = 0; i < 4; i++) {
+				{
+					for (int j = 0; j < 4; j++) {
+						//判断Cubeitem是不是有东西的点碰到左边了
+						if (m_Current_Cubeitem->c[i][j] && (m_Map[m_Current_Cubeitem_RowNum + i][m_Current_Cubeitem_ColNum -1 + j]))
+							return true;
+					}
+				}
+		}
+	}
+
+	return false;
+}
+
+
+bool CCubeGame::CheckBumpItemandmapforcol(bool isMoveLeft)
+{
+	if (isMoveLeft)
+		return CheckBumpItemandMapforleft();
+	else
+		return CheckBumpItemandMapforRight();
+	
 }
 
 bool CCubeGame::CheckBumpItemAndMap()
@@ -134,4 +185,47 @@ void CCubeGame::CopyItemToMap()
             m_Map[m_Current_Cubeitem_RowNum+i][m_Current_Cubeitem_ColNum+j] = m_Current_Cubeitem->c[i][j];
         }
     CreateCurrentCubeitem();
+}
+
+bool CCubeGame::CheckBumpItemandMapforRight()
+{
+	
+	int col = 0;
+		//这里说明到了右边界
+		for (int j = 3; j >= 0; j--) {
+				for (int i = 3; i >= 0; i--) {
+					//判断Cubeitem是不是有东西的点碰到左边了
+					if (m_Current_Cubeitem_ColNum + j>= 9)
+					{
+						if (m_Current_Cubeitem->c[i][j])
+							return true;
+					}
+					else
+					{
+						if (m_Current_Cubeitem->c[i][j] && m_Map[m_Current_Cubeitem_RowNum + i][m_Current_Cubeitem_ColNum + j + 1])
+							return true;
+
+					}
+			}
+		}
+// 	}
+// 	else
+// 	{
+// 		for (int i = 4; i > 0; i--) {
+// 			for (int j = 4; j > 0; j--) {
+// 						//判断Cubeitem是不是有东西的点碰到右边了
+// 						if (m_Current_Cubeitem->c[i][j] && (m_Map[m_Current_Cubeitem_RowNum + i][m_Current_Cubeitem_ColNum+1 + j]))
+// 							return true;
+// 					}
+// 				}
+// 		}
+// 	}
+
+	return false;
+
+}
+//判断是不是可以消除一行
+bool CCubeGame::CheckCanClearRow()
+{
+	return false;
 }

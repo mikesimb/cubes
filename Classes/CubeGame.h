@@ -135,7 +135,14 @@ protected:
 	void InitMap();
 	//碰撞检测
 	bool CheckBumpItemAndMap();
+	//判断列碰撞
+	bool CheckBumpItemandmapforcol(bool isMoveLeft);
+  
+	bool CheckBumpItemandMapforleft();
 
+	bool CheckBumpItemandMapforRight();
+
+	bool CheckCanClearRow();
 	bool CheckGameisOver();
     
 
